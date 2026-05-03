@@ -75,7 +75,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           version-type: "patch"
-          skip-commit: true
+          skip-commit: "true"
+          skip-tag: "true"
+          skip-push: "true"
 
       - name: Upload updated workspace with version
         uses: actions/upload-artifact@v7
