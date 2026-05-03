@@ -1,4 +1,4 @@
-name: pnpm-cache
+name: cache-store
 description: "Cache and retrieve cache"
 
 runs:
