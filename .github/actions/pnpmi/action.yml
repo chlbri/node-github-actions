@@ -5,14 +5,13 @@ inputs:
   branch:
     description: "Branch to test"
     required: false
-    type: string
 
 runs:
   using: "composite"
 
   steps:
     - name: "Install node"
-      uses: ./.github/actions/setup-pnpm.yml
+      uses: chlbri/node-github-actions/.github/actions/setup-pnpm
 
     - name: Cache and install dependencies
-      uses: ./.github/actions/cache-store.yml
+      uses: chlbri/node-github-actions/.github/actions/cache-store

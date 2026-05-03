@@ -21,7 +21,7 @@ jobs:
 
     steps:
       - name: Checkout pnpm repo
-        uses: ./.github/actions/pnpmi.yml
+        uses: chlbri/node-github-actions/.github/actions/pnpmi@main
 
       - name: Build
         run: pnpm run build
@@ -47,6 +47,7 @@ jobs:
 
       - name: GitHub Tag
         if: ${{ steps.publish.outputs.type }}
-        uses: ./.github/actions/tag.yml
+        uses: chlbri/node-github-actions/.github/actions/tag@main
         with:
           tag: ${{ steps.publish.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}

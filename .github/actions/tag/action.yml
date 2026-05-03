@@ -5,7 +5,9 @@ inputs:
   tag:
     description: "Tag string"
     required: true
-    type: string
+  token:
+    description: "GitHub token with write permissions"
+    required: true
 
 runs:
   using: "composite"
@@ -13,6 +15,6 @@ runs:
     - name: GitHub Tag
       uses: mathieudutour/github-tag-action@v6.2
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ inputs.token }}
         tag_prefix: "v"
         custom_tag: ${{ inputs.tag }}
