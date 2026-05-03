@@ -11,7 +11,7 @@ runs:
 
   steps:
     - name: "Install node"
-      uses: chlbri/node-github-actions/.github/actions/setup-pnpm
+      uses: chlbri/node-github-actions/.github/actions/setup-pnpm@main
 
     - name: Cache and install dependencies
-      uses: chlbri/node-github-actions/.github/actions/cache-store
+      uses: chlbri/node-github-actions/.github/actions/cache-store@main
