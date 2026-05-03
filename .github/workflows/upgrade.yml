@@ -76,7 +76,6 @@ jobs:
         with:
           version-type: "patch"
           skip-commit: true
-          skip-tag: true
 
       - name: Upload updated workspace with version
         uses: actions/upload-artifact@v7
