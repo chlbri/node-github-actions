@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout pnpm repo
-        uses: ./.github/actions/pnpmi.yml
+        uses: chlbri/node-github-actions/.github/actions/pnpmi@main
 
       - name: lint
         run: pnpm run lint
