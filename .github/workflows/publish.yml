@@ -1,0 +1,52 @@
+name: Publish
+
+on:
+  workflow_call:
+    inputs:
+      type:
+        description: "Type of publish. Can be 'latest' or 'beta', 'next' or 'canary'."
+        required: false
+        type: string
+        default: "latest"
+
+    secrets:
+      NPM_TOKEN:
+        description: "NPM token with publish permissions"
+        required: true
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout pnpm repo
+        uses: ./.github/actions/pnpmi.yml
+
+      - name: Build
+        run: pnpm run build
+
+      - uses: JS-DevTools/npm-publish@v4
+        id: publish
+        name: Publish
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          access: public
+          strategy: all
+          tag: ${{ inputs.type }}
+
+      - name: Check - updated
+        if: ${{ steps.publish.outputs.type }}
+        run: echo "${{ steps.publish.outputs.name }} Version changed from
+          ${{ steps.publish.outputs.old-version }} to ${{
+          steps.publish.outputs.version }}"
+
+      - name: Check - not updated
+        if: ${{ ! steps.publish.outputs.type }}
+        run: echo "Remain the same! - ${{ steps.publish.outputs.version }}"
+
+      - name: GitHub Tag
+        if: ${{ steps.publish.outputs.type }}
+        uses: ./.github/actions/tag.yml
+        with:
+          tag: ${{ steps.publish.outputs.version }}

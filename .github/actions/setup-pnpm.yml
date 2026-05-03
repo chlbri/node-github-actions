@@ -1,0 +1,21 @@
+name: setup-pnpm
+description: "Setup Node.js and pnpm"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repo
+      uses: actions/checkout@v6
+
+    - name: "Install node"
+      uses: actions/setup-node@v6
+      with:
+        node-version: 24
+        registry-url: "https://registry.npmjs.org"
+        scope: "@bemedev"
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v6
+      with:
+        version: 10
+        run_install: false

@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout pnpm repo
+        uses: ./.github/actions/pnpmi.yml
+
+      - name: lint
+        run: pnpm run lint
+
+      - name: Build
+        run: pnpm run pretest
+
+      - name: Test
+        run: pnpm run test:only
+
+      - name: Cleanup
+        run: pnpm run posttest

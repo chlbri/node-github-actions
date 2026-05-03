@@ -1,0 +1,18 @@
+name: pnpmi
+description: "Default pnpm create action"
+
+inputs:
+  branch:
+    description: "Branch to test"
+    required: false
+    type: string
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: "Install node"
+      uses: ./.github/actions/setup-pnpm.yml
+
+    - name: Cache and install dependencies
+      uses: ./.github/actions/cache-store.yml
