@@ -36,6 +36,14 @@ jobs:
             echo "changes=true" >> $GITHUB_OUTPUT
           fi
 
+      - name: Changed
+        if: steps.check-changes.outputs.changes == 'true'
+        run: echo "Changes detected in the workspace. Proceeding with version bump and publish."
+
+      - name: Not Changed
+        if: steps.check-changes.outputs.changes == 'false'
+        run: echo "No changes detected in the workspace. Skipping version bump and publish."
+
       - name: Upload workspace
         if: steps.check-changes.outputs.changes == 'true'
         uses: actions/upload-artifact@v7
