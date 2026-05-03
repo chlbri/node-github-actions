@@ -1,11 +1,6 @@
 name: pnpmi
 description: "Default pnpm create action"
 
-inputs:
-  branch:
-    description: "Branch to test"
-    required: false
-
 runs:
   using: "composite"
 
