@@ -7,6 +7,9 @@ on:
       NPM_TOKEN:
         description: "NPM token with publish permissions"
         required: true
+      GITHUB_TOKEN:
+        description: "GitHub token for authentication"
+        required: true
 
 jobs:
   ci-admin:
