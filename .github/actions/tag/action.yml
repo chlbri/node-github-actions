@@ -14,7 +14,7 @@ runs:
   steps:
     - name: Create Release
       id: create_release
-      uses: actions/create-release@latest
+      uses: chlbri/release-and-tag@latest
       env:
           GITHUB_TOKEN: ${{ inputs.token }}
       with:
