@@ -12,9 +12,15 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: GitHub Tag
-      uses: mathieudutour/github-tag-action@v6.2
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@latest
       with:
-        github_token: ${{ inputs.token }}
-        tag_prefix: "v"
-        custom_tag: ${{ inputs.tag }}
+        tag_name: ${{ inputs.tag }}
+        release_name: Release ${{ inputs.tag }}
+        body: |
+          Changes in this Release
+          - First Change
+          - Second Change
+        draft: false
+        prerelease: false
