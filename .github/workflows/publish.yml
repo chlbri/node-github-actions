@@ -14,6 +14,10 @@ on:
         description: "NPM token with publish permissions"
         required: true
 
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
+
 jobs:
   publish:
     name: Publish
