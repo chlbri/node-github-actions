@@ -33,6 +33,7 @@ jobs:
           token: ${{ secrets.NPM_TOKEN }}
           access: public
           strategy: all
+          provenance: true
           tag: ${{ inputs.type }}
 
       - name: Check - updated
