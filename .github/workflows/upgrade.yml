@@ -176,7 +176,7 @@ jobs:
         id: publish
         name: Publish
         with:
-          token: ${{ secrets.NPM_TOKEN }}
+          token: ${{ inputs.NPM_TOKEN }}
           access: public
           strategy: upgrade
 
