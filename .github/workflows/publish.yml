@@ -8,11 +8,10 @@ on:
         required: false
         type: string
         default: "latest"
-
-    secrets:
       NPM_TOKEN:
         description: "NPM token with publish permissions"
-        required: true
+        type: string
+        required: false
 
 permissions:
   id-token: write  # Required for OIDC
@@ -36,7 +35,7 @@ jobs:
         id: publish
         name: Publish
         with:
-          token: ${{ secrets.NPM_TOKEN }}
+          token: ${{ inputs.NPM_TOKEN }}
           access: public
           strategy: all
           provenance: true
