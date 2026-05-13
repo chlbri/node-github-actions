@@ -6,7 +6,7 @@ on:
     secrets:
       GITHUB_TOKEN:
         description: "GitHub token for authentication"
-        required: false
+        required: true
         
     inputs:
       NPM_TOKEN:
