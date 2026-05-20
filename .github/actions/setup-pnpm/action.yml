@@ -1,6 +1,16 @@
 name: setup-pnpm
 description: "Setup Node.js and pnpm"
 
+inputs:
+  node-version:
+    description: "Version of Node.js to use"
+    required: false
+    default: "24"
+  scope:
+    description: "npm scope"
+    required: false
+    default: "@bemedev"
+
 runs:
   using: "composite"
   steps:
@@ -10,9 +20,9 @@ runs:
     - name: "Install node"
       uses: actions/setup-node@v6
       with:
-        node-version: 24
+        node-version: ${{ inputs.node-version }}
         registry-url: "https://registry.npmjs.org"
-        scope: "@bemedev"
+        scope: ${{ inputs.scope }}
 
     - name: Install pnpm
       uses: pnpm/action-setup@v6
