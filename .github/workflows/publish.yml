@@ -8,9 +8,9 @@ on:
         required: false
         type: string
         default: "latest"
+    secrets:
       NPM_TOKEN:
         description: "NPM token with publish permissions"
-        type: string
         required: false
 
 permissions:
@@ -35,7 +35,7 @@ jobs:
         id: publish
         name: Publish
         with:
-          token: ${{ inputs.NPM_TOKEN }}
+          token: ${{ secrets.NPM_TOKEN }}
           access: public
           strategy: all
           provenance: true
