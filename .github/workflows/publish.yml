@@ -3,11 +3,18 @@ name: Publish
 on:
   workflow_call:
     inputs:
+    
       type:
         description: "Type of publish. Can be 'latest' or 'beta', 'next' or 'canary'."
         required: false
         type: string
         default: "latest"
+        
+      path:
+        description: "The path of the package to publish"
+        type: string
+        required: false
+        
     secrets:
       NPM_TOKEN:
         description: "NPM token with publish permissions"
