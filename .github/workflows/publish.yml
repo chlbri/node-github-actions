@@ -10,7 +10,7 @@ on:
         type: string
         default: "latest"
         
-      path:
+      package:
         description: "The path of the package to publish"
         type: string
         required: false
@@ -46,6 +46,7 @@ jobs:
           access: public
           strategy: all
           provenance: true
+          package: ${{ inputs.package }}
           tag: ${{ inputs.type }}
 
       - name: Check - updated
