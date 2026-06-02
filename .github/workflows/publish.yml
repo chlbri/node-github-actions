@@ -12,14 +12,14 @@ on:
         description: "The path of the package to publish"
         type: string
         required: false
-        
+
     secrets:
       NPM_TOKEN:
         description: "NPM token with publish permissions"
         required: false
 
 permissions:
-  id-token: write  # Required for OIDC
+  id-token: write # Required for OIDC
   contents: write
   pull-requests: write
   packages: write
@@ -36,28 +36,26 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      - uses: JS-DevTools/npm-publish@v4
+      - uses: chlbri/pnpm-publish@main
         id: publish
         name: Publish
         with:
-          token: ${{ secrets.NPM_TOKEN }}
           access: public
-          strategy: all
-          provenance: true
-          package: ${{ inputs.package }}
+          filter: ${{ inputs.package }}
           tag: ${{ inputs.type }}
+          provenance: true
 
       - name: Check - updated
-        if: ${{ steps.publish.outputs.type }}
-        run: echo "${{ steps.publish.outputs.name }} Version changed from ${{ steps.publish.outputs.old-version }} to ${{ steps.publish.outputs.version }}"
+        if: ${{ steps.publish.outputs.released }}
+        run: echo "${{ steps.publish.outputs.name }} Version changed from ${{ steps.publish.outputs.old-version }} to ${{ steps.publish.outputs.new-version }}"
 
       - name: Check - not updated
-        if: ${{ ! steps.publish.outputs.type }}
-        run: echo "Remain the same! - ${{ steps.publish.outputs.version }}"
+        if: ${{ ! steps.publish.outputs.released }}
+        run: echo "Remain the same! - ${{ steps.publish.outputs.old-version }}"
 
       - name: GitHub Tag
-        if: ${{ steps.publish.outputs.type }}
+        if: ${{ steps.publish.outputs.released }}
         uses: chlbri/node-github-actions/.github/actions/tag@main
         with:
-          tag: ${{ steps.publish.outputs.version }}
+          tag: ${{ steps.publish.outputs.new-version }}
           token: ${{ secrets.GITHUB_TOKEN }}
