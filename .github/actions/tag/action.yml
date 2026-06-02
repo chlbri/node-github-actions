@@ -21,8 +21,6 @@ runs:
         tag_name: ${{ inputs.tag }}
         release_name: Release ${{ inputs.tag }}
         body: |
-          Changes in this Release
-          - First Change
-          - Second Change
+          Changes in this Release ${{ inputs.tag }}
         draft: false
         prerelease: false
