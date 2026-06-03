@@ -44,6 +44,7 @@ jobs:
           filter: ${{ inputs.package }}
           tag: ${{ inputs.type }}
           provenance: true
+          AUTH: ${{ secrets.NPM_TOKEN }}
 
       - name: Check - updated
         if: ${{ steps.publish.outputs.released }}
