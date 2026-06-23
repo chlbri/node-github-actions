@@ -58,5 +58,5 @@ jobs:
         if: ${{ steps.publish.outputs.released }}
         uses: chlbri/node-github-actions/.github/actions/tag@main
         with:
-          tag: ${{ steps.publish.outputs.new-version }}-${{inputs.package}}
+          tag: ${{ steps.publish.outputs.new-version }}${{ inputs.package != '' && format('-{0}', inputs.package) || '' }}
           token: ${{ secrets.GITHUB_TOKEN }}
