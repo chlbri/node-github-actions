@@ -3,10 +3,7 @@ name: Admin Update
 on:
   # Manual trigger
   workflow_call:
-    secrets:
-      GITHUB_TOKEN:
-        description: "GitHub token for authentication"
-        required: true        
+    secrets:     
       NPM_TOKEN:
         description: "NPM token with publish permissions"
         required: false
