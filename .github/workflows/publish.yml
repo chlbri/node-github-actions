@@ -34,7 +34,7 @@ jobs:
         uses: chlbri/node-github-actions/.github/actions/pnpmi@main
 
       - name: Build
-        run: pnpm ${{ inputs.package != '' && format('--filter {0}', inputs.package) || '' }} run build
+        run: pnpm run build
 
       - uses: chlbri/pnpm-publish@main
         id: publish
