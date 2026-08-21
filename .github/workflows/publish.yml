@@ -12,6 +12,11 @@ on:
         description: "The path of the package to publish"
         type: string
         required: false
+      build:
+        description: "Whether to build before publishing"
+        type: boolean
+        required: false
+        default: true
 
     secrets:
       NPM_TOKEN:
@@ -34,6 +39,7 @@ jobs:
         uses: chlbri/node-github-actions/.github/actions/pnpmi@main
 
       - name: Build
+        if: ${{ inputs.build }}
         run: pnpm run build
 
       - uses: chlbri/pnpm-publish@main
