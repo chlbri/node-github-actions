@@ -16,8 +16,6 @@ on:
         description: "Artifact name to download when build is false"
         type: string
         required: false
-        default: "built-workspace"
-
 
     secrets:
       NPM_TOKEN:
@@ -40,14 +38,14 @@ jobs:
         uses: chlbri/node-github-actions/.github/actions/pnpmi@main
 
       - name: Download workspace
-        if: ${{ inputs.artifact }}
+        if: inputs.artifact
         uses: actions/download-artifact@v8
         with:
           name: ${{ inputs.artifact }}
           path: .
 
       - name: Build
-        if: ${{ !inputs.artifact }}
+        if: !inputs.artifact
         run: pnpm run build
 
       - uses: chlbri/pnpm-publish@main
@@ -61,15 +59,15 @@ jobs:
           AUTH: ${{ secrets.NPM_TOKEN }}
 
       - name: Check - updated
-        if: ${{ steps.publish.outputs.released }}
+        if: steps.publish.outputs.released
         run: echo "${{ steps.publish.outputs.name }} Version changed from ${{ steps.publish.outputs.old-version }} to ${{ steps.publish.outputs.new-version }}"
 
       - name: Check - not updated
-        if: ${{ ! steps.publish.outputs.released }}
+        if: !steps.publish.outputs.released
         run: echo "Remain the same! - ${{ steps.publish.outputs.old-version }}"
 
       - name: GitHub Tag
-        if: ${{ steps.publish.outputs.released }}
+        if: steps.publish.outputs.released
         uses: chlbri/node-github-actions/.github/actions/tag@main
         with:
           tag: ${{ steps.publish.outputs.new-version }}${{ inputs.package != '' && format('-{0}', inputs.package) || '' }}

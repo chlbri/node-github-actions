@@ -175,17 +175,17 @@ jobs:
           strategy: upgrade
 
       - name: Check - updated
-        if: ${{ steps.publish.outputs.type }}
+        if: steps.publish.outputs.type
         run: echo "${{ steps.publish.outputs.name }} Version changed from
           ${{ steps.publish.outputs.old-version }} to ${{
           steps.publish.outputs.version }}"
 
       - name: Check - not updated
-        if: ${{ ! steps.publish.outputs.type }}
+        if: !steps.publish.outputs.type
         run: echo "Remain the same! - ${{ steps.publish.outputs.version }}"
 
       - name: GitHub Tag
-        if: ${{ steps.publish.outputs.type }}
+        if: steps.publish.outputs.type
         uses: chlbri/node-github-actions/.github/actions/tag@main
         with:
           tag: ${{ steps.publish.outputs.version }}
