@@ -35,7 +35,6 @@ jobs:
 
     steps:
       - name: Checkout pnpm repo
-        if: ${{ !inputs.artifact }}
         uses: chlbri/node-github-actions/.github/actions/pnpmi@main
 
       - name: Download workspace
