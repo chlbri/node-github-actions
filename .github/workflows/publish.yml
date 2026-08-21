@@ -38,14 +38,14 @@ jobs:
         uses: chlbri/node-github-actions/.github/actions/pnpmi@main
 
       - name: Download workspace
-        if: inputs.artifact
+        if: ${{ inputs.artifact }}
         uses: actions/download-artifact@v8
         with:
           name: ${{ inputs.artifact }}
           path: .
 
       - name: Build
-        if: !inputs.artifact
+        if: ${{ !inputs.artifact }}
         run: pnpm run build
 
       - uses: chlbri/pnpm-publish@main
