@@ -12,11 +12,12 @@ on:
         description: "The path of the package to publish"
         type: string
         required: false
-      build:
-        description: "Whether to build before publishing"
-        type: boolean
+      artifact:
+        description: "Artifact name to download when build is false"
+        type: string
         required: false
-        default: true
+        default: "built-workspace"
+
 
     secrets:
       NPM_TOKEN:
@@ -38,8 +39,15 @@ jobs:
       - name: Checkout pnpm repo
         uses: chlbri/node-github-actions/.github/actions/pnpmi@main
 
+      - name: Download workspace
+        if: ${{ inputs.artifact }}
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.artifact }}
+          path: .
+
       - name: Build
-        if: ${{ inputs.build }}
+        if: ${{ !inputs.artifact }}
         run: pnpm run build
 
       - uses: chlbri/pnpm-publish@main
