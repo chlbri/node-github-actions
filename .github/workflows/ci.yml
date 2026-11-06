@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Build
-        run: pnpm run pretest
-        
       - name: Checkout pnpm repo
         uses: chlbri/node-github-actions/.github/actions/pnpmi@main
+
+      - name: Build
+        run: pnpm run pretest
 
       - name: lint
         run: pnpm run lint
