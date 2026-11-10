@@ -13,7 +13,7 @@ jobs:
         uses: chlbri/node-github-actions/.github/actions/pnpmi@main
 
       - name: Setup Void Zero
-        uses: voidzero-dev/setup-vp@<setup-vp-version>
+        uses: voidzero-dev/setup-vp@v1
         with:
           node-version: '24'
           cache: true
