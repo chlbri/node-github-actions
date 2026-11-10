@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  workflow_call:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout pnpm repo
+        uses: chlbri/node-github-actions/.github/actions/pnpmi@main
+
+      - name: Setup Void Zero
+        uses: voidzero-dev/setup-vp@<setup-vp-version>
+        with:
+          node-version: '24'
+          cache: true
+
+      - name: Restore Vite Task cache
+        id: vite-task-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: node_modules/.vite/task-cache
+          key: vite-task-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            vite-task-${{ runner.os }}-${{ runner.arch }}-
+
+      - name: Build
+        run: vp run pretest
+
+      - name: lint
+        run: vp run lint
+
+      - name: Test
+        run: vi run test:only
+
+      - name: Cleanup
+        run: vp run posttest
+
+      - name: Save Vite Task cache
+        if: success()
+        uses: actions/cache/save@v6
+        with:
+          path: node_modules/.vite/task-cache
+          key: ${{ steps.vite-task-cache.outputs.cache-primary-key }}
