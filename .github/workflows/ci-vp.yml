@@ -34,7 +34,7 @@ jobs:
         run: vp run lint
 
       - name: Test
-        run: vi run test:only
+        run: vp run test:only
 
       - name: Cleanup
         run: vp run posttest
