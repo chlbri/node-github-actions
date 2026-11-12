@@ -9,4 +9,4 @@ runs:
       uses: chlbri/node-github-actions/.github/actions/setup-pnpm@main
 
     - name: Cache and install dependencies
-      uses: chlbri/node-github-actions/.github/actions/cache-store@main
+      uses: chlbri/node-github-actions/.github/actions/cache-pnpm-store@main

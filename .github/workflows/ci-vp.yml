@@ -9,27 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout pnpm repo
-        uses: chlbri/node-github-actions/.github/actions/pnpmi@main
-
-      - name: Setup Void Zero
-        uses: voidzero-dev/setup-vp@v1
-        with:
-          node-version: '24'
-          cache: true
-
-      - name: Restore Vite Task cache
-        id: vite-task-cache
-        uses: actions/cache/restore@v6
-        with:
-          path: node_modules/.vite/task-cache
-          key: vite-task-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
-          restore-keys: |
-            vite-task-${{ runner.os }}-${{ runner.arch }}-
+      - name: Checkout pnpm repo and voidzero
+        id: pnpmi-vp
+        uses: chlbri/node-github-actions/.github/actions/pnpmi-vp@main
 
       - name: Install
         run: vp install
-        
+
       - name: Build
         run: vp run pretest
 
@@ -42,9 +28,12 @@ jobs:
       - name: Cleanup
         run: vp run posttest
 
+      # `needs:` is not allowed on a step, so `always()` is the step-level
+      # equivalent: the save is not blocked by an earlier failing step.
+      # `continue-on-error` keeps a cache-save problem from failing the job.
       - name: Save Vite Task cache
-        if: success()
+        if: steps.pnpmi-vp.outputs.vite-task-cache-hit != 'true'
         uses: actions/cache/save@v6
         with:
           path: node_modules/.vite/task-cache
-          key: ${{ steps.vite-task-cache.outputs.cache-primary-key }}
+          key: ${{ steps.pnpmi-vp.outputs.vite-task-cache-key }}
