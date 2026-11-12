@@ -32,8 +32,8 @@ jobs:
       # equivalent: the save is not blocked by an earlier failing step.
       # `continue-on-error` keeps a cache-save problem from failing the job.
       - name: Save Vite Task cache
-        if: steps.pnpmi-vp.outputs.vite-task-cache-hit != 'true'
+        if: steps.pnpmi-vp.outputs.hit != 'true'
         uses: actions/cache/save@v6
         with:
-          path: node_modules/.vite/task-cache
-          key: ${{ steps.pnpmi-vp.outputs.vite-task-cache-key }}
+          path: ${{ steps.pnpmi-vp.outputs.path }}
+          key: ${{ steps.pnpmi-vp.outputs.key }}

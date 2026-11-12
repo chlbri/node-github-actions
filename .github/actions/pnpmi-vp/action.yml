@@ -1,0 +1,43 @@
+name: pnpmi-vp
+description: "Setup pnpm + Void Zero (vp) and restore the Vite task cache. Exposes the cache path, key and hit as step outputs."
+
+inputs:
+  path:
+    description: "Directory of the Vite task cache to restore."
+    required: false
+    default: "node_modules/.vite/task-cache"
+
+outputs:
+  path:
+    description: "Directory of the Vite task cache. Pass it to actions/cache/save."
+    value: ${{ inputs.path }}
+  key:
+    description: "Primary key of the restored Vite task cache. Pass it to actions/cache/save."
+    value: ${{ steps.cache.outputs.cache-matched-key }}
+  hit:
+    description: "'true' when the cache was restored by an exact key match."
+    value: ${{ steps.cache.outputs.cache-hit }}
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Checkout pnpm repo
+      uses: chlbri/node-github-actions/.github/actions/pnpmi@main
+
+    - name: Setup Void Zero
+      uses: voidzero-dev/setup-vp@v1
+      with:
+        node-version: 24
+        cache: true
+
+    - name: Restore Vite Task cache
+      id: cache
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ inputs.path }}
+        # Same key scheme as publish-vp.yml so the cache is shared across
+        # workflows and the restore-keys prefix below actually matches it.
+        key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ runner.arch }}-
