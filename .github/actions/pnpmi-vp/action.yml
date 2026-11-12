@@ -38,6 +38,6 @@ runs:
         path: ${{ inputs.path }}
         # Same key scheme as publish-vp.yml so the cache is shared across
         # workflows and the restore-keys prefix below actually matches it.
-        key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+        key: ${{ runner.os }}-${{ runner.arch }}-vite-tasks-${{ hashFiles('**/pnpm-lock.yaml') }}
         restore-keys: |
-          ${{ runner.os }}-${{ runner.arch }}-
+          ${{ runner.os }}-${{ runner.arch }}-vite-tasks
