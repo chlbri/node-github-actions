@@ -1,0 +1,100 @@
+name: Publish
+
+on:
+  workflow_call:
+    inputs:
+      type:
+        description: "Type of publish. Can be 'latest' or 'beta', 'next' or 'canary'."
+        required: false
+        type: string
+        default: "latest"
+      package:
+        description: "The path of the package to publish"
+        type: string
+        required: false
+      artifact:
+        description: "Artifact name to download when build is false"
+        type: string
+        required: false
+
+    secrets:
+      NPM_TOKEN:
+        description: "NPM token with publish permissions"
+        required: false
+
+permissions:
+  id-token: write # Required for OIDC
+  contents: write
+  pull-requests: write
+  packages: write
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+
+      - name: Setup Void Zero
+        uses: voidzero-dev/setup-vp@v1
+        with:
+          node-version: "24"
+          cache: true
+          # Default is true, set explicitly: this installs the workspace with
+          # the managed pnpm, which the publish action below relies on.
+          run-install: true
+
+      # Restore only. ci-vp.yml is the single writer of this cache: a publisher
+      # running on a tag/release ref can only ever write a cache scoped to that
+      # ref, which no other run can read. Same key scheme as ci-vp so the exact
+      # entry saved by CI in this run is reused when it already exists, and the
+      # prefix falls back to the newest entry of the branch/default branch.
+      - name: Restore Vite Task cache
+        if: ${{ !inputs.artifact }}
+        id: vite-task-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: node_modules/.vite/task-cache
+          key: vite-task-${{ runner.os }}-${{ runner.arch }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            vite-task-${{ runner.os }}-${{ runner.arch }}-
+
+      - name: Download workspace
+        if: ${{ inputs.artifact }}
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.artifact }}
+          path: .
+
+      # Must stay `vp run` (not `pnpm run`): only the vp task runner reads and
+      # writes node_modules/.vite/task-cache.
+      - name: Build
+        if: ${{ !inputs.artifact }}
+        run: vp run pretest
+
+      - uses: chlbri/pnpm-publish@main
+        id: publish
+        name: Publish
+        with:
+          access: public
+          filter: ${{ inputs.package }}
+          tag: ${{ inputs.type }}
+          provenance: true
+          AUTH: ${{ secrets.NPM_TOKEN }}
+
+      - name: Check - updated
+        if: ${{ steps.publish.outputs.released }}
+        run: echo "${{ steps.publish.outputs.name }} Version changed from ${{ steps.publish.outputs.old-version }} to ${{ steps.publish.outputs.new-version }}"
+
+      - name: Check - not updated
+        if: ${{ !steps.publish.outputs.released }}
+        run: echo "Remain the same! - ${{ steps.publish.outputs.old-version }}"
+
+      - name: GitHub Tag
+        if: ${{ steps.publish.outputs.released }}
+        uses: chlbri/node-github-actions/.github/actions/tag@main
+        with:
+          tag: ${{ steps.publish.outputs.new-version }}${{ inputs.package != '' && format('-{0}', inputs.package) || '' }}
+          token: ${{ secrets.GITHUB_TOKEN }}
