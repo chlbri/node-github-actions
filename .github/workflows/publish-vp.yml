@@ -41,25 +41,26 @@ jobs:
         uses: voidzero-dev/setup-vp@v1
         with:
           node-version: "24"
-          cache: true
           # Default is true, set explicitly: this installs the workspace with
           # the managed pnpm, which the publish action below relies on.
           run-install: true
+          cache: false
 
       # Restore only. ci-vp.yml is the single writer of this cache: a publisher
       # running on a tag/release ref can only ever write a cache scoped to that
-      # ref, which no other run can read. Same key scheme as ci-vp so the exact
-      # entry saved by CI in this run is reused when it already exists, and the
-      # prefix falls back to the newest entry of the branch/default branch.
+      # ref, which no other run can read. The full ref scopes the key to the
+      # current branch, so the exact entry saved by CI in this run is reused
+      # when it already exists, and the prefix below falls back to the newest
+      # entry of the branch/default branch.
       - name: Restore Vite Task cache
         if: ${{ !inputs.artifact }}
         id: vite-task-cache
         uses: actions/cache/restore@v6
         with:
           path: node_modules/.vite/task-cache
-          key: ${{ runner.os }}-${{ runner.arch }}-vite-tasks-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-vite-tasks-${{ github.ref }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-vite-tasks
+            ${{ runner.os }}-${{ runner.arch }}-vite-tasks-${{ github.ref }}
 
       - name: Download workspace
         if: ${{ inputs.artifact }}
