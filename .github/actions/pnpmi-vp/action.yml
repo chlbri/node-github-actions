@@ -31,13 +31,13 @@ runs:
         node-version: 24
         cache: true
 
-    - name: Restore Vite Task cache
-      id: cache
-      uses: actions/cache/restore@v6
-      with:
-        path: ${{ inputs.path }}
-        # Same key scheme as publish-vp.yml so the cache is shared across
-        # workflows and the restore-keys prefix below actually matches it.
-        key: ${{ runner.os }}-${{ runner.arch }}-vite-tasks-${{ hashFiles('**/pnpm-lock.yaml') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ runner.arch }}-vite-tasks
+    # - name: Restore Vite Task cache
+    #   id: cache
+    #   uses: actions/cache/restore@v6
+    #   with:
+    #     path: ${{ inputs.path }}
+    #     # Same key scheme as publish-vp.yml so the cache is shared across
+    #     # workflows and the restore-keys prefix below actually matches it.
+    #     key: ${{ runner.os }}-${{ runner.arch }}-vite-tasks-${{ hashFiles('**/pnpm-lock.yaml') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-${{ runner.arch }}-vite-tasks
